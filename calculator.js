@@ -52,10 +52,10 @@
             else if(o === "-") {
                 n1 = n1 - n2;
             }
-            else if(o == "*") {
+            else if(o === "*") {
                 n1 = n1 * n2;
             }
-            else if(o == "/") {
+            else if(o === "/") {
                 n1 = n1 / n2;
             } 
             i++;
