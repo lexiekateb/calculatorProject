@@ -13,7 +13,7 @@
             <div class="container">
 
                 <div class="image">
-                    <img src="C:\Users\Student\calculator\calculator.png">
+                    <img id="calcImg" src="C:\Users\Student\calculator\lightMode.png">
                 </div>
             
                 <div class="inout">
@@ -25,6 +25,27 @@
                     <p id="input"></p>
                     <p id="output"></p>
                 </div>
+
+                <div class="buttons">
+                    <div id="butt"> <button type="button" onclick="butt(1)">1</button></div>
+                    <div id="2"><button type="button" onclick="butt(2)">2</button></div>
+                    <div id="3"><button type="button" onclick="butt(3)">3</button></div>
+                    <div id="+"><button type="button" onclick="butt('+')">+</button></div>
+                    <div id="4"><button type="button" onclick="butt(4)">4</button></div>
+                    <div id="5"><button type="button" onclick="butt(5)">5</button></div>
+                    <div id="6"><button type="button" onclick="butt(6)">6</button></div>
+                    <div id="-"><button type="button" onclick="butt('-')">-</button></div>
+                    <div id="7"><button type="button" onclick="butt(7)">7</button></div>
+                    <div id="8"><button type="button" onclick="butt(8)">8</button></div>
+                    <div id="9"><button type="button" onclick="butt(9)">9</button></div>
+                    <div id="*"><button type="button" onclick="butt('*')">X</button></div>
+                    <div id="0"><button type="button" onclick="butt(0)">0</button></div>
+                    <div><button id="clr" type="button" onclick="clearField()">clr</button></div>
+                    <div><button id="ans" type="button" onclick="useAns()">ans</button></div>
+                    <div id="/"><button type="button" onclick="butt('/')">/</button></div>
+                </div>
+
+                <div class="darkLight"><button id="toggMode" onclick="darkLight()">Toggle Dark/Light</button></div>
 
             </div>
 

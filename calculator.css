@@ -1,6 +1,6 @@
 body {
     color: black;
-    background-color: #5c6d93;
+    background-color: #93c7e6;
 }
 
 h1 {
@@ -9,26 +9,68 @@ h1 {
     font-size: large;
 }
 
+.lightMode {
+    color: black;
+    background-color: #93c7e6;
+}
+
+.darkMode {
+    color: black;
+    background-color: #660c80;
+}
+
 .container {
     display: inline-block;
     position: relative;
-    text-align: left;
+    text-align: center;
 }
 
 .image {
     position: relative;
     top: 50%;
-    left: 25%;
+    left: 70%;
 }
 
 .inout {
+    text-align: left;
     position: absolute;
-    top: 210px;
-    left: 475px;
+    top: 85px;
+    left: 500px;
 }
 
 .results {
+    text-align: left;
     position: absolute;
-    top: 208px;
-    left: 555px;
+    top: 82px;
+    left: 577px;
+}
+
+.buttons {
+    position:absolute;
+    top: 180px;
+    left: 475px;
+    display: grid;
+    grid-template-rows: repeat(5, 70px);
+    grid-template-columns: repeat(4, 70px);
+    align-items: left;
+}
+
+button {
+    font-family: monospace;
+    color: black;
+    display: inline-block;
+    border: 2px double #cccccc;
+    padding: 20px;
+    text-align: center;
+}
+
+.darkLight {
+    position: absolute;
+    top: 20px;
+    left: 1000px;
+}
+
+#toggMode {
+    font-size:x-small;
+    padding: 4px;
 }

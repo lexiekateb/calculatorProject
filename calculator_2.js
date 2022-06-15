@@ -4,12 +4,14 @@ var op;
 var lastOp = true;
 var lastNum = false;
 var input = "";
+var lMode = true;
+var result = "";
 
 document.addEventListener("keydown", function(e){
 
     e.preventDefault();
     
-    if(e.shiftKey && (e.key === "+")) {
+    if(e.key === "+") {
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
@@ -20,7 +22,13 @@ document.addEventListener("keydown", function(e){
     }
     else if(e.key === "-") {
         if(lastOp) {
-            alert("You may not enter two operations in a row.");
+            if(input.charAt(input.length - 1) === "-") {
+                input = input.slice(0, input.length - 1);
+                input += "+";
+            }
+            else {
+                alert("You may not enter two operations in a row.");
+            }
         }
         else {
             input += "-";
@@ -111,6 +119,49 @@ document.addEventListener("keydown", function(e){
 
 });
 
+function butt(n) {
+    if(n === "+" || n === "/" || n === "-" || n === "*" || n === ".") {
+        if(lastOp) {
+            alert("You may not enter two operations in a row.");
+        }
+        else {
+            lastOp = true;
+            input += n;
+        }
+    }
+    else {
+        lastOp = false;
+        input += n;
+    }
+
+    evaluate(input);
+}
+
+function clearField() {
+    n1 = 0;
+    n2;
+    op;
+    lastOp = true;
+    lastNum = false;
+    input = "";
+    result = "";
+
+    document.getElementById("input").innerHTML = input;
+    document.getElementById("output").innerHTML = result;
+}
+
+function useAns() {
+    if(lastOp) {
+        alert("You cannot have an operation without a number after.");
+    }
+    else {
+        input = result;
+        lastOp = false;
+        document.getElementById("input").innerHTML = input;
+    }
+
+}
+
 function evaluate(input) {
 
     //splitting input into operands and operators
@@ -172,5 +223,20 @@ function deleteLast(input) {
     }
 
     return input;
+}
+
+function darkLight() {
+
+    if(lMode) {
+        document.getElementById("calcImg").src = "darkMode.png"
+        lMode = false;
+        document.body.className = "darkMode";
+    }
+    else {
+        document.getElementById("calcImg").src = "lightMode.png"
+        lMode = true;
+        document.body.className = "lightMode";
+    }
+
 }
 
