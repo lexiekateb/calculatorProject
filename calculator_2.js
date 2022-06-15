@@ -6,6 +6,9 @@ var lastNum = false;
 var input = "";
 var lMode = true;
 var result = "";
+var openPar = false;
+var numOPar = 0;
+var numCPar = 0;
 
 document.addEventListener("keydown", function(e){
 
@@ -106,12 +109,23 @@ document.addEventListener("keydown", function(e){
     else if(e.key === "Backspace") {
         input = deleteLast(input);
     }
+    else if(e.key === "(") {
+        if(lastOp) {
+            input += "(";
+            numOPar++;
+        }
+        else {
+            input += "*";
+            input += "(";
+            numOPar++;
+        }
+    }
     else {
         if(e.shiftKey) {
             //ignore
         }
         else {
-            alert("Only numbers and operands (+-/*) are valid inputs.");
+            alert("Only numbers, parenthesis, and operands (+-/*) are valid inputs.");
         }
     }
 
@@ -145,6 +159,7 @@ function clearField() {
     lastNum = false;
     input = "";
     result = "";
+    openPar = false;
 
     document.getElementById("input").innerHTML = input;
     document.getElementById("output").innerHTML = result;
@@ -152,14 +167,15 @@ function clearField() {
 
 function useAns() {
     if(lastOp) {
-        alert("You cannot have an operation without a number after.");
+        input += result;
+        evaluate(input);
+        lastOp = false;
     }
     else {
         input = result;
         lastOp = false;
         document.getElementById("input").innerHTML = input;
     }
-
 }
 
 function evaluate(input) {
@@ -168,6 +184,8 @@ function evaluate(input) {
     let ops = input.split(/[+/*-]/).filter(Boolean);        //operands
     let oper = input.split(/[\d\.]/).filter(Boolean);       //operators
 
+    //let arr = Array.from(input);
+    //result = perform(arr);
     result = performOperation(ops, oper);
 
     document.getElementById("input").innerHTML = input;
@@ -239,4 +257,3 @@ function darkLight() {
     }
 
 }
-
