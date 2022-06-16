@@ -55,6 +55,10 @@ h1 {
     align-items: left;
 }
 
+.warning {
+    color: red;
+}
+
 button {
     font-family: monospace;
     color: black;

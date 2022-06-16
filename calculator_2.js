@@ -13,6 +13,8 @@ var numCPar = 0;
 document.addEventListener("keydown", function(e){
 
     e.preventDefault();
+
+    console.log(e.key);
     
     if(e.key === "+") {
         if(lastOp) {
@@ -110,14 +112,22 @@ document.addEventListener("keydown", function(e){
         input = deleteLast(input);
     }
     else if(e.key === "(") {
+        input += "(";
+        numOPar++;
+        lastOp = true;
+    }
+    else if(e.key === ")") {
         if(lastOp) {
-            input += "(";
-            numOPar++;
+            alert("You must have a number after an operator.");
         }
         else {
-            input += "*";
-            input += "(";
-            numOPar++;
+            if(numOPar = 0) {
+                alert("You must have an open parenthesis.");
+            }
+            else {
+                input += ")";
+                numCPar++;
+            }
         }
     }
     else {
@@ -129,8 +139,16 @@ document.addEventListener("keydown", function(e){
         }
     }
 
-    evaluate(input);
-
+    if(numOPar != numCPar) {
+        document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
+        document.getElementById("input").innerHTML = input;
+    }
+    else {
+        evaluate(input);
+        document.getElementById("input").innerHTML = input;
+        document.getElementById("parTest").innerHTML = input;
+        document.getElementById("warning").innerHTML = "";
+    }
 });
 
 function butt(n) {
@@ -180,15 +198,18 @@ function useAns() {
 
 function evaluate(input) {
 
+    //checking parenthesis cases
+    //check the input and insert * when parenthesis:
+    //touch ie (9+2)(2-1) is now (9+2)*(2-1)
+    //have a number right next to it ie 2(3+4) is now 2*(3+4)
+
+
     //splitting input into operands and operators
-    let ops = input.split(/[+/*-]/).filter(Boolean);        //operands
+    let ops = input.split(/[+/*-()]/).filter(Boolean);      //operands
     let oper = input.split(/[\d\.]/).filter(Boolean);       //operators
 
-    //let arr = Array.from(input);
-    //result = perform(arr);
     result = performOperation(ops, oper);
 
-    document.getElementById("input").innerHTML = input;
     document.getElementById("output").innerHTML = result;
 
 }
