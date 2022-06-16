@@ -4,6 +4,7 @@
         <title>Calculator Project</title>
         <link href="calculator.css" rel="stylesheet" type="text/css" />
         <script src="calculator_3.js"></script>
+        <meta charset="UTF-8" />
     </head>
 
     <body>
@@ -33,7 +34,7 @@
                 <div class="buttons">
                     <div id="1"> <button type="button" onclick="butt(1)">1</button></div>
                     <div id="2"><button type="button" onclick="butt(2)">2</button></div>
-                    <div id="3"><button type="button" onclick="butt(3)">3</button></div>
+                    <div id="3"><button type="button" onclick="butt('(')">3</button></div>
                     <div id="+"><button type="button" onclick="butt('+')">+</button></div>
                     <div id="4"><button type="button" onclick="butt(4)">4</button></div>
                     <div id="5"><button type="button" onclick="butt(5)">5</button></div>
@@ -51,7 +52,7 @@
 
                 <div class="darkLight"><button id="toggMode" onclick="darkLight()">Toggle Dark/Light</button></div>
 
-                <div id="test"><p id="parTest"></p></div>
+                <div id="test"><input type="text" id="parTest"/></div>
                 <div><input id="pareTest"/></div>
 
             </div>

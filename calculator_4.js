@@ -1,4 +1,4 @@
-let input = new Array();
+let input = "";
 var lastOp = true;
 var lMode = true;
 var result = "";
@@ -10,36 +10,38 @@ document.addEventListener("keydown", function(e){
 
     e.preventDefault();
     let k = e.key;
+    console.log(e.key);
     
     if(k === "+" || k === "*" || k === "/" || k === ".") {
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
         else {
-            input.push(k);
+            input += k;
             lastOp = true;
         }
     }
     else if(k === "-") {
         if(lastOp) {
-            if(input[input.length - 1] === "-") {
+            if(input.charAt(input.length - 1) === "-") {
                 input = input.slice(0, input.length - 1);
-                input.push("+");
+                input += "+";
             }
             else {
                 alert("You may not enter two operations in a row.");
             }
         }
         else {
-            input.push("-");
+            input += "-";
             lastOp = true;
         }
     }
     else if(k === "1" || k === "2" || k === "3" || k === "4" || k === "5" || k === "6" || k === "7" || k === "8" || k === "9" || k === "0") {
-        if(input[input.length-1] === ")") {
-            input.push("*");
+        if(input.charAt(input.length - 1) === ")") {
+            input += "*";
         }
-        input.push(k);
+        
+        input += k;
         lastOp = false;
     }
     else if(e.key === "Backspace") {
@@ -47,19 +49,19 @@ document.addEventListener("keydown", function(e){
     }
     else if(e.key === "(") {
         if(!lastOp) {
-            input.push("*");
-            input.push("(");
+            input += "*";
+            input += "(";
             numOPar++;
             lastOp = true;
         }
         else if (input[input.length-1] === ")") {
-            input.push("*");
-            input.push("(");
+            input += "*";
+            input += "(";
             numOPar++;
             lastOp = true;
         }
         else {
-            input.push("(");
+            input += "(";
             numOPar++;
             lastOp = true;
         }
@@ -73,7 +75,7 @@ document.addEventListener("keydown", function(e){
                 alert("You must have an open parenthesis.");
             }
             else {
-                input.push(")");
+                input += ")";
                 numCPar++;
             }
         }
@@ -87,29 +89,12 @@ document.addEventListener("keydown", function(e){
         }
     }
 
-    inputText = input.join("");
-    console.log(inputText);
-
-    document.getElementById("parTest").innerHTML = inputText;
-
     if(numOPar != numCPar) {
         document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
-        document.getElementById("input").innerHTML = inputText;
-    }
-    else if(lastOp == false) {
-        console.log("checkpoint 1");
-        res = solve(input);
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = res;
-    }
-    else if(input[input.length-1] === ")") {
-        res = solve(input);
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = res;
+        document.getElementById("input").innerHTML = input;
     }
     else {
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("warning").innerHTML = "";
+        solve(input);
     }
 });
 
@@ -120,24 +105,22 @@ function butt(n) {
         }
         else {
             lastOp = true;
-            input.push(n);
+            input += n;
         }
     }
     else {
         lastOp = false;
-        input.push(n);
+        input += n;
     }
 
-    res = solve(input);
-    document.getElementById("input").innerHTML = input.join("");
-    document.getElementById("output").innerHTML = res;
+    solve(input);
 }
 
 function clearField() {
 
     lastOp = true;
     lastNum = false;
-    input = [];
+    input = "";
     result = "";
     openPar = false;
 
@@ -147,23 +130,21 @@ function clearField() {
 
 function useAns() {
     if(lastOp) {
-        input.push(result);
-        evaluate(input);
+        input += result;
+        solve(input);
         lastOp = false;
     }
     else {
-        input.push(result);
+        input = result;
         lastOp = false;
-        document.getElementById("input").innerHTML = input.join("");
+        document.getElementById("input").innerHTML = result;
     }
 }
 
 function deleteLast(input) {
 
     input = input.slice(0, input.length - 1);
-    let l = input[input.length - 1];
-
-    console.log(l === "+" || l === "-" || l === "/" || l ==="*");
+    let l = input.charAt(input.length - 1);
 
     if(l === "+" || l === "-" || l === "/" || l === "*" || l === ".") {
         lastOp = true;
@@ -191,9 +172,6 @@ function darkLight() {
 }
 
 function MDAS(arr) {
-
-    console.log("entered MDAS");
-
     let ans = 0;
 
     if(arr.length == 1) {
@@ -214,7 +192,6 @@ function MDAS(arr) {
     //checking for divison
     for(i=0; i < arr.length; i++) {
         if(arr[i] === "/") {
-            console.log("hi im in the / loop");
             ans = (+arr[i-1] / +arr[i+1]);
             arr.splice(i-1, 3, ans);
             ans=0;
@@ -225,8 +202,11 @@ function MDAS(arr) {
     //checking for addition
     for(i=0; i < arr.length; i++) {
         if(arr[i] === "+") {
+            console.log("hi im in the / loop");
+            console.log(arr);
             ans = (+arr[i-1] + +arr[i+1]);
             arr.splice(i-1, 3, ans);
+            console.log(arr);
             ans=0;
             i=0;
         }
@@ -242,50 +222,41 @@ function MDAS(arr) {
         }
     }
 
+    console.log(arr[0]);
     return arr[0];
 
 }
 
 function solve(input) {
-    console.log("entered solve");
     let arr = new Array();
-    arr = [...input];
-
-    if(arr.length == 1) {
-        return arr[0];
-    }
+    arr = input.split("");
+    console.log(arr);
 
     let fopen = 0;
     let res;
 
     for(i=0; i < arr.length; i++) {
-        console.log(arr[0] === "(");
         if(arr[i] === "(") {
-            console.log("identified first parenthesis");
             fopen = i;
             break;
         }
     }
 
-    console.log("reached here 1");
-
     for(i=fopen+1; i < arr.length; i++) {
         if(arr[i] === "(") {
             solve(arr.slice(i, arr.length));
-            console.log("reached here");
         }
-
-        console.log("reached here 2");
-
         if(arr[i] === ")") {
-            console.log("checkpoint: checking for closed parenthesis");
-            let rando = arr.slice(fopen+1, i);
-            console.log(rando);
-            res = MDAS(rando);
+            res = MDAS(arr.slice(fopen+1, i));
             arr.splice(fopen, i, res);
             solve(arr);
         }
     }
 
-    return MDAS(arr);
+    console.log("checkpoint 1");
+    let result = MDAS(arr);
+
+    document.getElementById("input").innerHTML = input;
+    document.getElementById("output").innerHTML = result;
+    document.getElementById("warning").innerHTML = "";
 }
