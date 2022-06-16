@@ -69,7 +69,7 @@ document.addEventListener("keydown", function(e){
             alert("You must have a number after an operator.");
         }
         else {
-            if(numOPar = 0) {
+            if(numOPar == 0) {
                 alert("You must have an open parenthesis.");
             }
             else {
@@ -88,21 +88,22 @@ document.addEventListener("keydown", function(e){
     }
 
     inputText = input.join("");
-    console.log(inputText);
 
     document.getElementById("parTest").innerHTML = inputText;
 
     if(numOPar != numCPar) {
+        console.log("entered if statement 1");
         document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
         document.getElementById("input").innerHTML = inputText;
     }
     else if(lastOp == false) {
-        console.log("checkpoint 1");
+        console.log("entered if statement 2");
         res = solve(input);
         document.getElementById("input").innerHTML = inputText;
         document.getElementById("output").innerHTML = res;
     }
     else if(input[input.length-1] === ")") {
+        console.log("entered if statement 3");
         res = solve(input);
         document.getElementById("input").innerHTML = inputText;
         document.getElementById("output").innerHTML = res;
@@ -203,7 +204,6 @@ function MDAS(arr) {
     //checking for multiplication
     for(i=0; i < arr.length; i++) {
         if(arr[i] === "*") {
-            console.log(arr);
             ans = (+arr[i-1] * +arr[i+1]);
             arr.splice(i-1, 3, ans);
             ans=0;
@@ -214,7 +214,6 @@ function MDAS(arr) {
     //checking for divison
     for(i=0; i < arr.length; i++) {
         if(arr[i] === "/") {
-            console.log("hi im in the / loop");
             ans = (+arr[i-1] / +arr[i+1]);
             arr.splice(i-1, 3, ans);
             ans=0;
@@ -269,20 +268,22 @@ function solve(input) {
 
     console.log("reached here 1");
 
-    for(i=fopen+1; i < arr.length; i++) {
-        if(arr[i] === "(") {
-            solve(arr.slice(i, arr.length));
-            console.log("reached here");
+    for(k = fopen + 1; k < arr.length; k++) {
+        if(arr[k] === "(") {
+            solve(arr.slice(k, arr.length));
         }
 
         console.log("reached here 2");
 
-        if(arr[i] === ")") {
+        if(arr[k] === ")") {
             console.log("checkpoint: checking for closed parenthesis");
-            let rando = arr.slice(fopen+1, i);
+            let rando = arr.slice(fopen+1, k);
             console.log(rando);
             res = MDAS(rando);
-            arr.splice(fopen, i, res);
+            console.log(fopen);
+            console.log(k);
+            arr.splice(fopen, k+1, res);
+            console.log(arr);
             solve(arr);
         }
     }
