@@ -20,15 +20,14 @@ h1 {
 }
 
 .container {
-    display: inline-block;
     position: relative;
-    text-align: center;
+    text-align: left;
 }
 
 .image {
     position: relative;
     top: 50%;
-    left: 70%;
+    left: 28%;
 }
 
 .inout {
@@ -56,6 +55,10 @@ h1 {
 }
 
 .warning {
+    position: absolute;
+    font-size: xx-small;
+    top: 400px;
+    left: 500px;
     color: red;
 }
 
