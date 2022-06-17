@@ -98,15 +98,20 @@ document.addEventListener("keydown", function(e){
         answer = perform(input);
         document.getElementById("input").innerHTML = inputText;
         document.getElementById("output").innerHTML = answer;
+        document.getElementById("warning").innerHTML = "";
     }
     else if(input[input.length-1] === ")") {
         answer = perform(input);
         document.getElementById("input").innerHTML = inputText;
         document.getElementById("output").innerHTML = answer;
+        document.getElementById("warning").innerHTML = "";
+
     }
     else {
         document.getElementById("input").innerHTML = inputText;
         document.getElementById("warning").innerHTML = "";
+        document.getElementById("warning").innerHTML = "";
+
     }
 });
 
