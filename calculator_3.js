@@ -120,14 +120,18 @@ function butt(n) {
             input.push(n);
         }
     }
+    else if(input[input.length -1] === ")") {
+        input.push("*");
+        input.push(answer);
+    }
     else {
         lastOp = false;
         input.push(n);
     }
 
-    res = perform(input);
+    answer = perform(input);
     document.getElementById("input").innerHTML = input.join("");
-    document.getElementById("output").innerHTML = res;
+    document.getElementById("output").innerHTML = answer;
 }
 
 function clearField() {
@@ -144,12 +148,12 @@ function clearField() {
 
 function useAns() {
     if(lastOp) {
-        input.push(result);
-        perform(input);
+        input.push(answer);
+        answer = perform(input);
         lastOp = false;
     }
     else {
-        input.push(result);
+        input = [answer];
         lastOp = false;
         document.getElementById("input").innerHTML = input.join("");
     }
