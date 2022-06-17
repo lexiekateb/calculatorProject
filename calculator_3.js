@@ -317,6 +317,7 @@ function solve(input) {
 
 function perform(input) {
     console.log("entered perform");
+    let stack = new Array();
     let nums = new Array();
     nums = [...input];
     console.log("nums: " + nums);
@@ -324,26 +325,36 @@ function perform(input) {
     let cPar = new Array();
     let foundP = false;
 
-    console.log(nums[2] === "(");
-    console.log(nums.length);
+    // //checking for open parenthesis and logging
+    // for(let i=nums.length; i >= 0; i--) {
+    //     console.log("entered for loop");
+    //     if(nums[i] === "(") {
+    //         foundP = true;
+    //         oPar.push(i);
+    //     }
+    // }
 
-    //checking for open parenthesis and logging
-    for(let i=nums.length; i >= 0; i--) {
-        console.log("entered for loop");
-        if(nums[i] === "(") {
-            foundP = true;
-            oPar.push(i);
-        }
-    }
+    // //checking for closed parenthesis and logging in reverse
+    // for(let i=0; i < nums.length; i++) {
+    //     if(nums[i] === ")") {
+    //         cPar.push(i);
+    //     }
+    // }
 
-    //checking for closed parenthesis and logging in reverse
     for(let i=0; i < nums.length; i++) {
-        if(nums[i] === ")") {
-            cPar.push(i);
+        if(nums[i] === "(") {
+            stack.push(i);
+            foundP = true;
+        }
+        else if(nums[i] === ")") {
+            idx = stack.pop() + 1;
+            console.log("nums going into MDAS: " + nums.slice(idx, i));
+            let patricia = MDAS(nums.slice(idx, i));
+            nums.splice(idx-1, i-idx+2, patricia);
+            i=idx;
         }
     }
 
-    console.log(foundP);
     if(foundP == false) {
         console.log("entered if statement");
         let checking = MDAS(nums);
@@ -351,16 +362,17 @@ function perform(input) {
         return checking;
     }
 
-    let section = new Array();
-    let result;
-    for(let i=0; i < oPar.length; i++) {
-        section = nums.slice(oPar[i]+1, cPar[i]);
-        console.log("section going into MDAS: " + section);
-        result = MDAS(section);
-        nums.splice(oPar[i], cPar[i]-oPar[i]+1, result);
-        console.log("nums after splice: " + nums);
-    }
+    // let section = new Array();
+    // let result;
+    // for(let i=0; i < oPar.length; i++) {
+    //     section = nums.slice(oPar[i]+1, cPar[i]);
+    //     console.log("section going into MDAS: " + section);
+    //     result = MDAS(section);
+    //     nums.splice(oPar[i], cPar[i]-oPar[i]+1, result);
+    //     console.log("nums after splice: " + nums);
+    // }
 
-    perform(nums);
-
+    let josh = perform(nums);
+    return josh;
+    
 }
