@@ -47,7 +47,7 @@ h1 {
 .buttons {
     position:absolute;
     top: 180px;
-    left: 475px;
+    left: 480px;
     display: grid;
     grid-template-rows: repeat(5, 70px);
     grid-template-columns: repeat(4, 70px);
