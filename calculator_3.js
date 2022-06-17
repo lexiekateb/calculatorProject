@@ -5,6 +5,7 @@ var result = "";
 var openPar = false;
 var numOPar = 0;
 var numCPar = 0;
+let answer = 0;
 
 document.addEventListener("keydown", function(e){
 
@@ -98,15 +99,16 @@ document.addEventListener("keydown", function(e){
     }
     else if(lastOp == false) {
         console.log("entered if statement 2");
-        res = solve(input);
+        answer = perform(input);
+        console.log(answer);
         document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = res;
+        document.getElementById("output").innerHTML = answer;
     }
     else if(input[input.length-1] === ")") {
         console.log("entered if statement 3");
-        res = solve(input);
+        answer = perform(input);
         document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = res;
+        document.getElementById("output").innerHTML = answer;
     }
     else {
         document.getElementById("input").innerHTML = inputText;
@@ -221,6 +223,8 @@ function MDAS(arr) {
         }
     }
 
+    console.log("Before checking addition: " + arr);
+
     //checking for addition
     for(i=0; i < arr.length; i++) {
         if(arr[i] === "+") {
@@ -230,6 +234,8 @@ function MDAS(arr) {
             i=0;
         }
     }
+
+    console.log("After checking addition: " + arr);
 
     //checking for subtraction
     for(i=0; i < arr.length; i++) {
@@ -241,26 +247,36 @@ function MDAS(arr) {
         }
     }
 
+    console.log(typeof(arr[0]));
     return arr[0];
 
 }
 
 function solve(input) {
-    console.log("entered solve");
+    console.log(input);
     let arr = new Array();
     arr = [...input];
+    console.log("arr as entered solve: " + arr);
 
+    if(arr.length == 2) {
+        if(arr[1] == ")") {
+            console.log("returning length 2");
+            return arr;
+        }
+    }
     if(arr.length == 1) {
+        console.log("returning: " + arr[0]);
         return arr[0];
     }
 
     let fopen = 0;
-    let res;
+    let res = new Array();
+    let parFound = false;
 
     for(i=0; i < arr.length; i++) {
-        console.log(arr[0] === "(");
         if(arr[i] === "(") {
             console.log("identified first parenthesis");
+            parFound = true;
             fopen = i;
             break;
         }
@@ -269,24 +285,82 @@ function solve(input) {
     console.log("reached here 1");
 
     for(k = fopen + 1; k < arr.length; k++) {
+
+        console.log("before open par if statement");
         if(arr[k] === "(") {
-            solve(arr.slice(k, arr.length));
+            console.log("found open parenthesis, recurring into solve");
+            res = solve(arr.slice(k, arr.length));
+            console.log("res: " + res);
+            arr.splice(fopen, 0, res);
         }
 
         console.log("reached here 2");
 
         if(arr[k] === ")") {
-            console.log("checkpoint: checking for closed parenthesis");
-            let rando = arr.slice(fopen+1, k);
-            console.log(rando);
-            res = MDAS(rando);
-            console.log(fopen);
-            console.log(k);
-            arr.splice(fopen, k+1, res);
-            console.log(arr);
-            solve(arr);
+            console.log("entered MDAS after closed parenthesis found: " + arr.slice(fopen+1, k));
+            res = MDAS(arr.slice(fopen+1, k));
+            console.log("arr before splice: " + arr);
+            let idx = arr.indexOf(")");
+            console.log("value of idx-fopen: " + (idx-fopen));
+            arr.splice(fopen, idx-fopen+1, res);
+            console.log("arr after splice: " + arr);
+            break;
+        }
+    }
+    
+    if(parFound == false) {
+        return MDAS(arr);
+    }
+
+    solve(arr);
+}
+
+function perform(input) {
+    console.log("entered perform");
+    let nums = new Array();
+    nums = [...input];
+    console.log("nums: " + nums);
+    let oPar = new Array();
+    let cPar = new Array();
+    let foundP = false;
+
+    console.log(nums[2] === "(");
+    console.log(nums.length);
+
+    //checking for open parenthesis and logging
+    for(let i=nums.length; i >= 0; i--) {
+        console.log("entered for loop");
+        if(nums[i] === "(") {
+            foundP = true;
+            oPar.push(i);
         }
     }
 
-    return MDAS(arr);
+    //checking for closed parenthesis and logging in reverse
+    for(let i=0; i < nums.length; i++) {
+        if(nums[i] === ")") {
+            cPar.push(i);
+        }
+    }
+
+    console.log(foundP);
+    if(foundP == false) {
+        console.log("entered if statement");
+        let checking = MDAS(nums);
+        console.log(checking);
+        return checking;
+    }
+
+    let section = new Array();
+    let result;
+    for(let i=0; i < oPar.length; i++) {
+        section = nums.slice(oPar[i]+1, cPar[i]);
+        console.log("section going into MDAS: " + section);
+        result = MDAS(section);
+        nums.splice(oPar[i], cPar[i]-oPar[i]+1, result);
+        console.log("nums after splice: " + nums);
+    }
+
+    perform(nums);
+
 }
