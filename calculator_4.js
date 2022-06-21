@@ -1,81 +1,88 @@
-let input = "";
+let input = new Array();
 var lastOp = true;
 var lMode = true;
 var result = "";
 var openPar = false;
 var numOPar = 0;
 var numCPar = 0;
+let answer = 0;
+let userInput = "";
 
 document.addEventListener("keydown", function(e){
 
     e.preventDefault();
     let k = e.key;
-    console.log(e.key);
     
     if(k === "+" || k === "*" || k === "/" || k === ".") {
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
         else {
-            input += k;
+            input.push(userInput);
+            input.push(k);
             lastOp = true;
         }
     }
     else if(k === "-") {
         if(lastOp) {
-            if(input.charAt(input.length - 1) === "-") {
+            if(input[input.length - 1] === "-") {
+                input.push(userInput);
                 input = input.slice(0, input.length - 1);
-                input += "+";
+                input.push("+");
             }
             else {
                 alert("You may not enter two operations in a row.");
             }
         }
         else {
-            input += "-";
+            input.push(userInput);
+            input.push("-");
             lastOp = true;
         }
     }
     else if(k === "1" || k === "2" || k === "3" || k === "4" || k === "5" || k === "6" || k === "7" || k === "8" || k === "9" || k === "0") {
-        if(input.charAt(input.length - 1) === ")") {
-            input += "*";
+        if(input[input.length-1] === ")") {
+            input.push(userInput);
+            input.push("*");
         }
-        
-        input += k;
+        userInput += k;
         lastOp = false;
     }
-    else if(e.key === "Backspace") {
+    else if(k === "Backspace") {
         input = deleteLast(input);
     }
-    else if(e.key === "(") {
+    else if(k === "(") {
         if(!lastOp) {
-            input += "*";
-            input += "(";
+            input.push(userInput);
+            input.push("*");
+            input.push("(");
             numOPar++;
             lastOp = true;
         }
         else if (input[input.length-1] === ")") {
-            input += "*";
-            input += "(";
+            input.push("*");
+            input.push("(");
             numOPar++;
             lastOp = true;
         }
         else {
-            input += "(";
+            input.push(userInput);
+            input.push("(");
             numOPar++;
             lastOp = true;
         }
     }
-    else if(e.key === ")") {
+    else if(k === ")") {
         if(lastOp) {
             alert("You must have a number after an operator.");
         }
         else {
-            if(numOPar = 0) {
+            if(numOPar == 0) {
                 alert("You must have an open parenthesis.");
             }
             else {
-                input += ")";
+                input.push(userInput);
+                input.push(")");
                 numCPar++;
             }
         }
@@ -84,179 +91,85 @@ document.addEventListener("keydown", function(e){
         if(e.shiftKey) {
             //ignore
         }
+        else if(k = "Enter") {
+            input.push(userInput);
+
+            if(numCPar != numOPar) {
+                alert("You do not have the same number of parenthesis.")
+            }
+            else if(input[input.length-1] === ")") {
+                answer = perform(input);
+                document.getElementById("input").innerHTML = input.join("");
+                document.getElementById("output").innerHTML = answer;
+                document.getElementById("warning").innerHTML = "";
+            }
+            else if(lastOp) {
+                alert("You may not end with an operator.");
+            }
+            else {
+                answer = perform(input);
+                document.getElementById("input").innerHTML = input.join("");
+                document.getElementById("output").innerHTML = answer;
+                document.getElementById("warning").innerHTML = "";
+            }
+        }
         else {
             alert("Only numbers, parenthesis, and operands (+-/*) are valid inputs.");
         }
     }
 
-    if(numOPar != numCPar) {
+    if(numCPar != numOPar) {
         document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
-        document.getElementById("input").innerHTML = input;
+        document.getElementById("input").innerHTML = input.join("") + userInput;
+    }
+    else if(input[input.length-1] === ")") {
+        answer = perform(input);
+        document.getElementById("input").innerHTML = input.join("");
+        document.getElementById("output").innerHTML = answer;
+        document.getElementById("warning").innerHTML = "";
+    }
+    else if(lastOp) {
+        document.getElementById("warning").innerHTML = "You may not end with an operator.";
+        document.getElementById("input").innerHTML = input.join("") + userInput;
     }
     else {
-        solve(input);
-    }
-});
-
-function butt(n) {
-    if(n === "+" || n === "/" || n === "-" || n === "*" || n === ".") {
-        if(lastOp) {
-            alert("You may not enter two operations in a row.");
-        }
-        else {
-            lastOp = true;
-            input += n;
-        }
-    }
-    else {
-        lastOp = false;
-        input += n;
+        answer = perform(input);
+        document.getElementById("input").innerHTML = input.join("");
+        document.getElementById("output").innerHTML = answer;
+        document.getElementById("warning").innerHTML = "";
     }
 
-    solve(input);
-}
 
-function clearField() {
-
-    lastOp = true;
-    lastNum = false;
-    input = "";
-    result = "";
-    openPar = false;
-
-    document.getElementById("input").innerHTML = input;
-    document.getElementById("output").innerHTML = result;
-}
-
-function useAns() {
     if(lastOp) {
-        input += result;
-        solve(input);
-        lastOp = false;
-    }
-    else {
-        input = result;
-        lastOp = false;
-        document.getElementById("input").innerHTML = result;
-    }
-}
-
-function deleteLast(input) {
-
-    input = input.slice(0, input.length - 1);
-    let l = input.charAt(input.length - 1);
-
-    if(l === "+" || l === "-" || l === "/" || l === "*" || l === ".") {
-        lastOp = true;
-    }
-    else {
-        lastOp = false;
+        userInput = "";
     }
 
-    return input;
-}
 
-function darkLight() {
 
-    if(lMode) {
-        document.getElementById("calcImg").src = "darkMode.png"
-        lMode = false;
-        document.body.className = "darkMode";
-    }
-    else {
-        document.getElementById("calcImg").src = "lightMode.png"
-        lMode = true;
-        document.body.className = "lightMode";
-    }
+    
 
-}
+    // inputText = input.join("");
+    // if(numOPar != numCPar) {
+    //     document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
+    //     document.getElementById("input").innerHTML = inputText;
+    // }
+    // else if(lastOp == false) {
+    //     answer = perform(input);
+    //     document.getElementById("input").innerHTML = inputText;
+    //     document.getElementById("output").innerHTML = answer;
+    //     document.getElementById("warning").innerHTML = "";
+    // }
+    // else if(input[input.length-1] === ")") {
+    //     answer = perform(input);
+    //     document.getElementById("input").innerHTML = inputText;
+    //     document.getElementById("output").innerHTML = answer;
+    //     document.getElementById("warning").innerHTML = "";
 
-function MDAS(arr) {
-    let ans = 0;
+    // }
+    // else {
+    //     document.getElementById("input").innerHTML = inputText;
+    //     document.getElementById("warning").innerHTML = "";
+    //     document.getElementById("warning").innerHTML = "";
 
-    if(arr.length == 1) {
-        return arr[0];
-    }
-
-    //checking for multiplication
-    for(i=0; i < arr.length; i++) {
-        if(arr[i] === "*") {
-            console.log(arr);
-            ans = (+arr[i-1] * +arr[i+1]);
-            arr.splice(i-1, 3, ans);
-            ans=0;
-            i=0;
-        }
-    }
-
-    //checking for divison
-    for(i=0; i < arr.length; i++) {
-        if(arr[i] === "/") {
-            ans = (+arr[i-1] / +arr[i+1]);
-            arr.splice(i-1, 3, ans);
-            ans=0;
-            i=0;
-        }
-    }
-
-    //checking for addition
-    for(i=0; i < arr.length; i++) {
-        if(arr[i] === "+") {
-            console.log("hi im in the / loop");
-            console.log(arr);
-            ans = (+arr[i-1] + +arr[i+1]);
-            arr.splice(i-1, 3, ans);
-            console.log(arr);
-            ans=0;
-            i=0;
-        }
-    }
-
-    //checking for subtraction
-    for(i=0; i < arr.length; i++) {
-        if(arr[i] === "-") {
-            ans = (+arr[i-1] - +arr[i+1]);
-            arr.splice(i-1, 3, ans);
-            ans=0;
-            i=0;
-        }
-    }
-
-    console.log(arr[0]);
-    return arr[0];
-
-}
-
-function solve(input) {
-    let arr = new Array();
-    arr = input.split("");
-    console.log(arr);
-
-    let fopen = 0;
-    let res;
-
-    for(i=0; i < arr.length; i++) {
-        if(arr[i] === "(") {
-            fopen = i;
-            break;
-        }
-    }
-
-    for(i=fopen+1; i < arr.length; i++) {
-        if(arr[i] === "(") {
-            solve(arr.slice(i, arr.length));
-        }
-        if(arr[i] === ")") {
-            res = MDAS(arr.slice(fopen+1, i));
-            arr.splice(fopen, i, res);
-            solve(arr);
-        }
-    }
-
-    console.log("checkpoint 1");
-    let result = MDAS(arr);
-
-    document.getElementById("input").innerHTML = input;
-    document.getElementById("output").innerHTML = result;
-    document.getElementById("warning").innerHTML = "";
-}
+    // }
+});

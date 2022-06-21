@@ -6,24 +6,43 @@ var openPar = false;
 var numOPar = 0;
 var numCPar = 0;
 let answer = 0;
+let userInput = "";
+let enteredEnter = false;
 
 document.addEventListener("keydown", function(e){
 
     e.preventDefault();
     let k = e.key;
+    console.log("array at beginning of function: " + input);
+    console.log("key pressed: " + k);
+    console.log("registering enter: " + (k === "Enter"));
     
-    if(k === "+" || k === "*" || k === "/" || k === ".") {
+    if(k === "+" || k === "*" || k === "/") {
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
         else {
+            input.push(userInput);
             input.push(k);
+            lastOp = true;
+            userInput = "";
+        }
+        console.log("array after adding operation: " + input);
+
+    }
+    else if(k === ".") {
+        if(lastOp) {
+            alert("You cannot add a decimal after an operation.");
+        }
+        else {
+            userInput += ".";
             lastOp = true;
         }
     }
     else if(k === "-") {
         if(lastOp) {
             if(input[input.length - 1] === "-") {
+                input.push(userInput);
                 input = input.slice(0, input.length - 1);
                 input.push("+");
             }
@@ -32,22 +51,28 @@ document.addEventListener("keydown", function(e){
             }
         }
         else {
-            input.push("-");
+            input.push(userInput);
+            input.push(k);
             lastOp = true;
+            userInput = "";
         }
     }
     else if(k === "1" || k === "2" || k === "3" || k === "4" || k === "5" || k === "6" || k === "7" || k === "8" || k === "9" || k === "0") {
         if(input[input.length-1] === ")") {
+            input.push(userInput);
             input.push("*");
         }
-        input.push(k);
+        userInput += k;
         lastOp = false;
+        console.log("array after adding number: " + input);
+
     }
-    else if(e.key === "Backspace") {
+    else if(k === "Backspace") {
         input = deleteLast(input);
     }
-    else if(e.key === "(") {
+    else if(k === "(") {
         if(!lastOp) {
+            input.push(userInput);
             input.push("*");
             input.push("(");
             numOPar++;
@@ -60,12 +85,14 @@ document.addEventListener("keydown", function(e){
             lastOp = true;
         }
         else {
+            input.push(userInput);
             input.push("(");
             numOPar++;
             lastOp = true;
         }
+        userInput = "";
     }
-    else if(e.key === ")") {
+    else if(k === ")") {
         if(lastOp) {
             alert("You must have a number after an operator.");
         }
@@ -74,9 +101,40 @@ document.addEventListener("keydown", function(e){
                 alert("You must have an open parenthesis.");
             }
             else {
+                input.push(userInput);
                 input.push(")");
                 numCPar++;
+                userInput = "";
             }
+        }
+    }
+    else if(k === "Enter") {
+        enteredEnter = true;
+        input.push(userInput);
+        console.log("array after presssing enter: " + input);
+
+        if(numCPar != numOPar) {
+            alert("You do not have the same number of parenthesis.");
+            //document.getElementById("input").innerHTML = input.join("");
+        }
+        else if(input[input.length-1] === ")") {
+            answer = perform(input);
+            //document.getElementById("input").innerHTML = input.join("");
+            document.getElementById("output").innerHTML = answer;
+            document.getElementById("warning").innerHTML = "";
+            input = [answer];
+            userInput = "";
+        }
+        else if(lastOp) {
+            alert("You may not end with an operator.");
+        }
+        else {
+            answer = perform(input);
+            //document.getElementById("input").innerHTML = input.join("");
+            document.getElementById("output").innerHTML = answer;
+            document.getElementById("warning").innerHTML = "";
+            input = [answer];
+            userInput = "";
         }
     }
     else {
@@ -88,31 +146,8 @@ document.addEventListener("keydown", function(e){
         }
     }
 
-    inputText = input.join("");
+    document.getElementById("input").innerHTML = input.join("") + userInput;
 
-    if(numOPar != numCPar) {
-        document.getElementById("warning").innerHTML = "You must have the same number of open and closed parenthesis.";
-        document.getElementById("input").innerHTML = inputText;
-    }
-    else if(lastOp == false) {
-        answer = perform(input);
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = answer;
-        document.getElementById("warning").innerHTML = "";
-    }
-    else if(input[input.length-1] === ")") {
-        answer = perform(input);
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("output").innerHTML = answer;
-        document.getElementById("warning").innerHTML = "";
-
-    }
-    else {
-        document.getElementById("input").innerHTML = inputText;
-        document.getElementById("warning").innerHTML = "";
-        document.getElementById("warning").innerHTML = "";
-
-    }
 });
 
 function butt(n) {
@@ -146,6 +181,8 @@ function clearField() {
     input = [];
     result = "";
     openPar = false;
+    enteredEnter = false;
+    userInput = "";
 
     document.getElementById("input").innerHTML = input;
     document.getElementById("output").innerHTML = result;
@@ -244,7 +281,7 @@ function MDAS(arr) {
         }
     }
 
-    console.log(typeof(arr[0]));
+    console.log(arr[0]);
     return arr[0];
 
 }
