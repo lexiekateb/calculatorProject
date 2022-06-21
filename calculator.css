@@ -45,7 +45,7 @@ h1 {
 }
 
 .buttons {
-    position:absolute;
+    position: absolute;
     top: 180px;
     left: 480px;
     display: grid;
@@ -55,7 +55,7 @@ h1 {
 }
 
 .constants {
-    position:absolute;
+    position: absolute;
     top: 60px;
     left: 1000px;
 }
