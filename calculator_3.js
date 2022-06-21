@@ -1,10 +1,9 @@
 let input = new Array();
-var lastOp = true;
-var lMode = true;
-var result = "";
-var openPar = false;
-var numOPar = 0;
-var numCPar = 0;
+let lastOp = true;
+let lMode = true;
+let openPar = false;
+let numOPar = 0;
+let numCPar = 0;
 let answer = 0;
 let userInput = "";
 
@@ -152,7 +151,7 @@ document.addEventListener("keydown", function(e){
 
 //provides functionality for buttons on the calculator
 function butt(n) {
-    if(n === "+" || n === "/" || n === "*") {
+    if(n === "+" || n === "/" || n === "*") {                           //the user pressed an operand button
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
@@ -178,7 +177,7 @@ function butt(n) {
             userInput = "";
         }
     }
-    else if(input[input.length -1] === ")") {
+    else if(input[input.length -1] === ")") {                           //if the last entered is ), add a *
         input.push("*");
         userInput += n;
     }
@@ -187,24 +186,27 @@ function butt(n) {
         userInput += n;
     }
 
-    document.getElementById("input").innerHTML = input.join("") + userInput;
+    document.getElementById("input").innerHTML = input.join("") + userInput;    //updating input
 
 }
 
+//a function to reset the calculator
 function clearField() {
 
     lastOp = true;
     lastNum = false;
     input = [];
-    result = "";
     openPar = false;
     enteredEnter = false;
     userInput = "";
+    numCPar = 0;
+    numOPar = 0;
 
     document.getElementById("input").innerHTML = input;
-    document.getElementById("output").innerHTML = result;
+    document.getElementById("output").innerHTML = input.join("");
 }
 
+//a function to reuse the answer as part of the equation
 function useAns() {
     if(lastOp) {
         input.push(answer);
@@ -213,11 +215,11 @@ function useAns() {
     }
 }
 
+//a function to delete the last character in the calculation
+//IN WORK
 function deleteLast() {
 
-    console.log("Entering delete: " + input);
-
-    let l = input[input.length - 1];
+    let l = input[input.length - 1];                                                //used to check the previous
 
     if(lastOp) {
         console.log("enters loop");
@@ -260,21 +262,23 @@ function deleteLast() {
     document.getElementById("input").innerHTML = input.join("") + userInput;
 }
 
+//a function to change the CSS file depending on user choice for dark or light mode
 function darkLight() {
 
-    if(lMode) {
-        document.getElementById("calcImg").src = "darkMode.png"
+    if(lMode) {                                                             //if currently in light mode, switch to dark
+        document.getElementById("calcImg").src = "darkMode.png";
         lMode = false;
         document.body.className = "darkMode";
     }
-    else {
-        document.getElementById("calcImg").src = "lightMode.png"
+    else {                                                                  //if currently in dark mode, switch to light
+        document.getElementById("calcImg").src = "lightMode.png";
         lMode = true;
         document.body.className = "lightMode";
     }
 
 }
 
+//a function that performs MDAS in order and replaces the given array with correct answers
 function MDAS(arr) {
 
     let ans = 0;
@@ -285,8 +289,8 @@ function MDAS(arr) {
 
     //checking for multiplication
     for(i=0; i < arr.length; i++) {
-        if(arr[i] === "*") {
-            ans = (+arr[i-1] * +arr[i+1]);
+        if(arr[i] === "*") {                                        //if * is found, perform operation and replace the string with
+            ans = (+arr[i-1] * +arr[i+1]);                          // the correct answer.
             arr.splice(i-1, 3, ans);
             ans=0;
             i=0;
@@ -323,37 +327,36 @@ function MDAS(arr) {
         }
     }
 
-    console.log(arr[0]);
     return arr[0];
 
 }
 
+//a function that takes user input and finds the mathematical solution
 function perform(input) {
-    let stack = new Array();
-    let nums = new Array();
+    let stack = new Array();                                    //used to track parenthesis
+    let nums = new Array();                                     //used as a copy of input; numbers to perform operations on
     nums = [...input];
-    let foundP = false;
+    let foundP = false;                                         //tracking if parenthesis are found
 
     for(let i=0; i < nums.length; i++) {
         if(nums[i] === "(") {
-            stack.push(i);
+            stack.push(i);                                      //if an open parenthesis is found, push the index to a stack
             foundP = true;
         }
         else if(nums[i] === ")") {
-            idx = stack.pop() + 1;
-            let patricia = MDAS(nums.slice(idx, i));
-            nums.splice(idx-1, i-idx+2, patricia);
+            idx = stack.pop() + 1;                              //when a closed parenthesis is found, identify the most recent open
+            let patricia = MDAS(nums.slice(idx, i));            // parenthesis and then perform MDAS inside the parenthesis.
+            nums.splice(idx-1, i-idx+2, patricia);              //replace the solution for inside the parenthesis
             i=idx;
         }
     }
 
-    if(foundP == false) {
+    if(foundP == false) {                                       //if no parethesis found, then just perform MDAS
         let checking = MDAS(nums);
-        console.log(checking);
         return checking;
     }
 
-    let josh = perform(nums);
-    return josh;
+    let josh = perform(nums);                                   //if it did not enter the parenthesis loop, recurse
+    return josh;                                                //not letting it fall out of the function lol
     
 }
