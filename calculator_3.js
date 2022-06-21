@@ -65,7 +65,7 @@ document.addEventListener("keydown", function(e){
         lastOp = false;
     }
     else if(k === "Backspace") {                                        //checking for backspace
-        input = deleteLast(input);
+        deleteLast();
     }
     else if(k === "(") {                                                //checking for open parenthesis
         if(input.length == 0) {                                         //if length is 0, no need to push userInput
@@ -213,21 +213,51 @@ function useAns() {
     }
 }
 
-function deleteLast(input) {
+function deleteLast() {
 
-    input = input.slice(0, input.length - 1);
+    console.log("Entering delete: " + input);
+
     let l = input[input.length - 1];
 
-    console.log(l === "+" || l === "-" || l === "/" || l ==="*");
+    if(lastOp) {
+        console.log("enters loop");
+        if(l === "+" || l === "-" || l === "/" || l === "*" || l === ".") {
+            lastOp = false;
+        }
+        else if(l === "(") {
+            numOPar--;
+            m = input[input.length - 2];
+            if(m === "+" || m === "-" || m === "/" || m === "*") {
+                lastOp = true;
+            }
+            else {
+                lastOp = false;
+            }
+        }
+        else if(l === ")") {
+            numCPar--;
+            lastOp = false;
+        }
 
-    if(l === "+" || l === "-" || l === "/" || l === "*" || l === ".") {
-        lastOp = true;
+        console.log(input);
+        input.pop();
+        console.log(input);
     }
     else {
-        lastOp = false;
+        if(userInput === "") {
+            //ignore
+        }
+        else {
+            userInput = userInput.substring(0, userInput.length -1);
+            if(userInput === "") {
+                lastOp = true;
+            }
+        }
     }
 
-    return input;
+    console.log("exiting: " + userInput);
+
+    document.getElementById("input").innerHTML = input.join("") + userInput;
 }
 
 function darkLight() {
