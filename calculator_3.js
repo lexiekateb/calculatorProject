@@ -21,6 +21,10 @@ document.addEventListener("keydown", function(e){
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
+        else if(input[input.length - 1] === ")") {
+            input.push(k);
+            lastOp = true;
+        }
         else {
             input.push(userInput);
             input.push(k);
@@ -71,7 +75,12 @@ document.addEventListener("keydown", function(e){
         input = deleteLast(input);
     }
     else if(k === "(") {
-        if(!lastOp) {
+        if(input.length == 0) {
+            input.push("(");
+            lastOp = true;
+            numOPar++;
+        }
+        else if(!lastOp) {
             input.push(userInput);
             input.push("*");
             input.push("(");
@@ -83,6 +92,11 @@ document.addEventListener("keydown", function(e){
             input.push("(");
             numOPar++;
             lastOp = true;
+        }
+        else if(lastOp) {
+            input.push("(");
+            lastOp = true;
+            numOPar++;
         }
         else {
             input.push(userInput);
@@ -153,17 +167,19 @@ function butt(n) {
             alert("You may not enter two operations in a row.");
         }
         else {
-            lastOp = true;
+            input.push(userInput);
             input.push(n);
+            lastOp = true;
+            userInput = "";
         }
     }
     else if(input[input.length -1] === ")") {
         input.push("*");
-        input.push(answer);
+        input.push(userInput);
     }
     else {
         lastOp = false;
-        input.push(n);
+        userInput = "";
     }
 
     answer = perform(input);
