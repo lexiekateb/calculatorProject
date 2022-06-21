@@ -7,21 +7,19 @@ var numOPar = 0;
 var numCPar = 0;
 let answer = 0;
 let userInput = "";
-let enteredEnter = false;
 
+//listens for keydown and performs mathematical operation when Enter is pressed
 document.addEventListener("keydown", function(e){
 
     e.preventDefault();
     let k = e.key;
-    console.log("array at beginning of function: " + input);
-    console.log("key pressed: " + k);
-    console.log("registering enter: " + (k === "Enter"));
     
-    if(k === "+" || k === "*" || k === "/") {
+
+    if(k === "+" || k === "*" || k === "/") {                           //checking for operands
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
-        else if(input[input.length - 1] === ")") {
+        else if(input[input.length - 1] === ")") {                      //if ) is last entered, add *
             input.push(k);
             lastOp = true;
         }
@@ -31,10 +29,8 @@ document.addEventListener("keydown", function(e){
             lastOp = true;
             userInput = "";
         }
-        console.log("array after adding operation: " + input);
-
     }
-    else if(k === ".") {
+    else if(k === ".") {                                                //checking decimals
         if(lastOp) {
             alert("You cannot add a decimal after an operation.");
         }
@@ -43,9 +39,9 @@ document.addEventListener("keydown", function(e){
             lastOp = true;
         }
     }
-    else if(k === "-") {
+    else if(k === "-") {                                                //checking subtraction
         if(lastOp) {
-            if(input[input.length - 1] === "-") {
+            if(input[input.length - 1] === "-") {                       //if two -, then turn to + (allows for negative numbers)
                 input.push(userInput);
                 input = input.slice(0, input.length - 1);
                 input.push("+");
@@ -62,40 +58,36 @@ document.addEventListener("keydown", function(e){
         }
     }
     else if(k === "1" || k === "2" || k === "3" || k === "4" || k === "5" || k === "6" || k === "7" || k === "8" || k === "9" || k === "0") {
-        if(input[input.length-1] === ")") {
-            input.push(userInput);
+        if(input[input.length-1] === ")") {                             //if ) is last entered, push *
             input.push("*");
         }
         userInput += k;
         lastOp = false;
-        console.log("array after adding number: " + input);
-
     }
-    else if(k === "Backspace") {
+    else if(k === "Backspace") {                                        //checking for backspace
         input = deleteLast(input);
     }
-    else if(k === "(") {
-        if(input.length == 0) {
+    else if(k === "(") {                                                //checking for open parenthesis
+        if(input.length == 0) {                                         //if length is 0, no need to push userInput
             input.push("(");
             lastOp = true;
             numOPar++;
         }
-        else if(!lastOp) {
+        else if(!lastOp) {                                              //if a number was last entered, push * before (
             input.push(userInput);
             input.push("*");
             input.push("(");
             numOPar++;
             lastOp = true;
         }
-        else if (input[input.length-1] === ")") {
+        else if (input[input.length-1] === ")") {                       //if ) is last entered, push *
             input.push("*");
             input.push("(");
             numOPar++;
             lastOp = true;
         }
-        else if(lastOp) {
+        else if(lastOp) {                                               //if an operator is inputted last, no need to push userInput
             input.push("(");
-            lastOp = true;
             numOPar++;
         }
         else {
@@ -106,7 +98,7 @@ document.addEventListener("keydown", function(e){
         }
         userInput = "";
     }
-    else if(k === ")") {
+    else if(k === ")") {                                                //checking for closed parenthesis
         if(lastOp) {
             alert("You must have a number after an operator.");
         }
@@ -122,20 +114,17 @@ document.addEventListener("keydown", function(e){
             }
         }
     }
-    else if(k === "Enter") {
-        enteredEnter = true;
+    else if(k === "Enter") {                                            //checking for Enter (aka perform the operation)
         input.push(userInput);
-        console.log("array after presssing enter: " + input);
-
         if(numCPar != numOPar) {
             alert("You do not have the same number of parenthesis.");
         }
-        else if(input[input.length-1] === ")") {
+        else if(input[input.length-1] === ")") {                        //even if lastOp is true, if its a ), input is valid
             answer = perform(input);
             document.getElementById("output").innerHTML = answer;
             document.getElementById("warning").innerHTML = "";
             input = [];
-            userInput = answer;;
+            userInput = answer;
         }
         else if(lastOp) {
             alert("You may not end with an operator.");
@@ -149,7 +138,7 @@ document.addEventListener("keydown", function(e){
         }
     }
     else {
-        if(e.shiftKey) {
+        if(e.shiftKey) {                                                //allows for Shift + key presses
             //ignore
         }
         else {
@@ -157,12 +146,13 @@ document.addEventListener("keydown", function(e){
         }
     }
 
-    document.getElementById("input").innerHTML = input.join("") + userInput;
+    document.getElementById("input").innerHTML = input.join("") + userInput;    //updates input field
 
 });
 
+//provides functionality for buttons on the calculator
 function butt(n) {
-    if(n === "+" || n === "/" || n === "-" || n === "*" || n === ".") {
+    if(n === "+" || n === "/" || n === "*") {
         if(lastOp) {
             alert("You may not enter two operations in a row.");
         }
@@ -173,18 +163,32 @@ function butt(n) {
             userInput = "";
         }
     }
+    else if(n === "-") {
+        if(lastOp) {
+            if(input[input.length - 1] === "-") {                       //if two -, then turn to + (allows for negative numbers)
+                input.push(userInput);
+                input = input.slice(0, input.length - 1);
+                input.push("+");
+            }
+        }
+        else {
+            input.push(userInput);
+            input.push(n);
+            lastOp = true;
+            userInput = "";
+        }
+    }
     else if(input[input.length -1] === ")") {
         input.push("*");
-        input.push(userInput);
+        userInput += n;
     }
     else {
         lastOp = false;
-        userInput = "";
+        userInput += n;
     }
 
-    answer = perform(input);
-    document.getElementById("input").innerHTML = input.join("");
-    document.getElementById("output").innerHTML = answer;
+    document.getElementById("input").innerHTML = input.join("") + userInput;
+
 }
 
 function clearField() {
@@ -204,13 +208,8 @@ function clearField() {
 function useAns() {
     if(lastOp) {
         input.push(answer);
-        answer = perform(input);
         lastOp = false;
-    }
-    else {
-        input = [answer];
-        lastOp = false;
-        document.getElementById("input").innerHTML = input.join("");
+        document.getElementById("input").innerHTML = input.join("") + userInput;
     }
 }
 
