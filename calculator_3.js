@@ -115,26 +115,23 @@ document.addEventListener("keydown", function(e){
 
         if(numCPar != numOPar) {
             alert("You do not have the same number of parenthesis.");
-            //document.getElementById("input").innerHTML = input.join("");
         }
         else if(input[input.length-1] === ")") {
             answer = perform(input);
-            //document.getElementById("input").innerHTML = input.join("");
             document.getElementById("output").innerHTML = answer;
             document.getElementById("warning").innerHTML = "";
-            input = [answer];
-            userInput = "";
+            input = [];
+            userInput = answer;;
         }
         else if(lastOp) {
             alert("You may not end with an operator.");
         }
         else {
             answer = perform(input);
-            //document.getElementById("input").innerHTML = input.join("");
             document.getElementById("output").innerHTML = answer;
             document.getElementById("warning").innerHTML = "";
-            input = [answer];
-            userInput = "";
+            input = [];
+            userInput = answer;
         }
     }
     else {
