@@ -13,6 +13,9 @@ document.addEventListener("keydown", function(e){
     e.preventDefault();
     let k = e.key;
     
+    console.log("input entering keydown: " + input);
+    console.log("userInput entering keydown: " + userInput);
+
 
     if(k === "+" || k === "*" || k === "/") {                           //checking for operands
         if(lastOp) {
@@ -23,10 +26,15 @@ document.addEventListener("keydown", function(e){
             lastOp = true;
         }
         else {
-            input.push(userInput);
-            input.push(k);
-            lastOp = true;
-            userInput = "";
+            if(userInput === "") {
+                input.push(k);
+            }
+            else {
+                input.push(userInput);
+                input.push(k);
+                lastOp = true;
+                userInput = "";
+            }
         }
     }
     else if(k === ".") {                                                //checking decimals
@@ -50,10 +58,15 @@ document.addEventListener("keydown", function(e){
             }
         }
         else {
-            input.push(userInput);
-            input.push(k);
-            lastOp = true;
-            userInput = "";
+            if(userInput === "") {
+                input.push(k);
+            }
+            else {
+                input.push(userInput);
+                input.push(k);
+                lastOp = true;
+                userInput = "";
+            }
         }
     }
     else if(k === "1" || k === "2" || k === "3" || k === "4" || k === "5" || k === "6" || k === "7" || k === "8" || k === "9" || k === "0") {
@@ -145,6 +158,9 @@ document.addEventListener("keydown", function(e){
         }
     }
 
+    console.log("input leaving keydown: " + input);
+    console.log("userInput leaving keydown: " + userInput);
+
     document.getElementById("input").innerHTML = input.join("") + userInput;    //updates input field
 
 });
@@ -207,57 +223,30 @@ function clearField() {
 }
 
 //a function to reuse the answer as part of the equation
-function useAns() {
-    if(lastOp) {
-        input.push(answer);
-        lastOp = false;
-        document.getElementById("input").innerHTML = input.join("") + userInput;
-    }
-}
-
-//a function to delete the last character in the calculation
-//IN WORK
 function deleteLast() {
+    console.log("input entering delete: " + input);
+    console.log("userInput entering delete: " + userInput);
+    if(userInput != "") {
+        userInput = userInput.substring(0, userInput.length -1);
 
-    let l = input[input.length - 1];                                                //used to check the previous
-
-    if(lastOp) {
-        console.log("enters loop");
-        if(l === "+" || l === "-" || l === "/" || l === "*" || l === ".") {
-            lastOp = false;
+        if(userInput === "") {
+            lastOp = true;
         }
-        else if(l === "(") {
-            numOPar--;
-            m = input[input.length - 2];
-            if(m === "+" || m === "-" || m === "/" || m === "*") {
-                lastOp = true;
-            }
-            else {
-                lastOp = false;
-            }
-        }
-        else if(l === ")") {
-            numCPar--;
-            lastOp = false;
-        }
-
-        console.log(input);
-        input.pop();
-        console.log(input);
     }
     else {
-        if(userInput === "") {
-            //ignore
-        }
-        else {
-            userInput = userInput.substring(0, userInput.length -1);
-            if(userInput === "") {
+        if(input.length != 0) {
+            input.pop();
+            if(lastOp) {
+                lastOp = false;
+            }
+            else {
                 lastOp = true;
             }
         }
     }
 
-    console.log("exiting: " + userInput);
+    console.log("input leaving delete: " + input);
+    console.log("userInput leaving delete: " + userInput);
 
     document.getElementById("input").innerHTML = input.join("") + userInput;
 }
