@@ -8,7 +8,7 @@ let answer = 0;
 let userInput = "";
 
 //listens for keydown and performs mathematical operation when Enter is pressed
-document.addEventListener("keydown", function(e){
+document.addEventListener("keydown", function(e) {
 
     e.preventDefault();
     let k = e.key;
@@ -133,20 +133,26 @@ document.addEventListener("keydown", function(e){
         }
         else if(input[input.length-1] === ")") {                        //even if lastOp is true, if its a ), input is valid
             answer = perform(input);
-            document.getElementById("output").innerHTML = answer;
+            document.getElementById("output").innerHTML = answer.toFixed(5);
             document.getElementById("warning").innerHTML = "";
             input = [];
             userInput = answer;
+            if(answer === 69) {
+                alert("haha. nice");
+            }
         }
         else if(lastOp) {
             alert("You may not end with an operator.");
         }
         else {
             answer = perform(input);
-            document.getElementById("output").innerHTML = answer;
+            document.getElementById("output").innerHTML = answer.toFixed(5);
             document.getElementById("warning").innerHTML = "";
             input = [];
             userInput = answer;
+            if(answer === 69) {
+                alert("haha. nice");
+            }
         }
     }
     else {
@@ -197,6 +203,15 @@ function butt(n) {
         input.push("*");
         userInput += n;
     }
+    else if (n === 3.14159 || n === 2.71828) {
+        if(lastOp) {
+            userInput += n;
+            lastOp = false;
+        }
+        else {
+            alert("Please enter an operator before the constant.");
+        }
+    }
     else {
         lastOp = false;
         userInput += n;
@@ -222,7 +237,7 @@ function clearField() {
     document.getElementById("output").innerHTML = input.join("");
 }
 
-//a function to reuse the answer as part of the equation
+//a function to delete the last number inputed
 function deleteLast() {
     console.log("input entering delete: " + input);
     console.log("userInput entering delete: " + userInput);
@@ -244,9 +259,6 @@ function deleteLast() {
             }
         }
     }
-
-    console.log("input leaving delete: " + input);
-    console.log("userInput leaving delete: " + userInput);
 
     document.getElementById("input").innerHTML = input.join("") + userInput;
 }

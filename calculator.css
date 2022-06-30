@@ -73,8 +73,13 @@ button {
     color: black;
     display: inline-block;
     border: 2px double #cccccc;
+    background-color: #f0e9e9;
     padding: 20px;
     text-align: center;
+}
+
+button:hover {
+    background-color: #aaa8a8;
 }
 
 .darkLight {
