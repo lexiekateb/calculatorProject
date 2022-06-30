@@ -1,11 +1,11 @@
-let input = new Array();
-let lastOp = true;
-let lMode = true;
-let openPar = false;
-let numOPar = 0;
-let numCPar = 0;
-let answer = 0;
-let userInput = "";
+let input = new Array();                //initializing the user input array
+let lastOp = true;                      //keeps track of if the last user input was an operand
+let lMode = true;                       //whether or not light mode is turned on
+let openPar = false;                    //if there is an open parenthesis with no closing
+let numOPar = 0;                        //counts the number of open parenthesis
+let numCPar = 0;                        //counts the number of closed parenthesis
+let answer = 0;                         //the answer after user input has been calculated
+let userInput = "";                     //the current user input 
 
 //listens for keydown and performs mathematical operation when Enter is pressed
 document.addEventListener("keydown", function(e) {
